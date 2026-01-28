@@ -105,7 +105,7 @@ This rule is:
 
 ---
 
-## Suggested Pages / Routes
+## Pages / Routes
 
 - `/` — Dashboard / overview
 - `/signin` — Google sign-in
@@ -126,19 +126,16 @@ The project is expected to use **ASP.NET Core**, but final framework decisions a
 - **Blazor Server / Blazor WebAssembly**
 
 ### Frontend
-- Razor Pages (if staying fully in .NET)
+- Razor Pages
 - Blazor (C# UI)
-- React / Next.js (optional external frontend)
+- React / Next.js
 
 ### Authentication
 - Google OAuth via ASP.NET Core authentication
-- Or external auth provider (Auth0, Firebase, etc.)
 
 ### Database (TBD)
 - PostgreSQL
 - SQL Server
-- SQLite (local development)
-- MongoDB (document-based alternative)
 
 ---
 
@@ -165,16 +162,3 @@ Represents one night of ticket sales.
 - `EntryId`
 - `FilmTitle` (optional)
 - `CutPercent`
-
----
-
-## Environment Variables (Example)
-
-Actual names may vary depending on framework choice.
-
-```bash
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."
-DATABASE_CONNECTION_STRING="..."
-ASPNETCORE_ENVIRONMENT="Development"
-
