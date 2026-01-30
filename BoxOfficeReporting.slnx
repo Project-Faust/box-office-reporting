@@ -1,2 +1,5 @@
 <Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BoxOfficeReporting.Api/BoxOfficeReporting.Api.csproj" />
+  </Folder>
 </Solution>
