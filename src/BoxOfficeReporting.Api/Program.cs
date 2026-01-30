@@ -7,13 +7,34 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.MapGet(
+        "/",
+        () =>
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                return Results.Ok(
+                    new
+                    {
+                        service = "BoxOfficeReporting.Api",
+                        status = "running",
+                        endpoints = "/health",
+                    }
+                );
+            }
+
+            return Results.Ok(new { service = "BoxOfficeReporting.Api", status = "running" });
+        }
+    )
+    .WithName("Root");
+
+app.MapGet(
         "/health",
         () =>
             Results.Ok(
                 new
                 {
-                    status = "ok",
                     service = "BoxOfficeReporting.Api",
+                    status = "ok",
                     environment = app.Environment.EnvironmentName,
                 }
             )
