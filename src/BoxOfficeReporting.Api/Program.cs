@@ -1,9 +1,10 @@
-using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 
+// protect everything by default
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization(options =>
 {
@@ -41,8 +42,7 @@ app.MapGet(
             return Results.Ok(new { service = "BoxOfficeReporting.Api", status = "running" });
         }
     )
-    .AllowAnonymous()
-    .WithName("Root");
+    .WithName("ApiRoot");
 
 app.MapGet(
         "/health",
@@ -56,6 +56,7 @@ app.MapGet(
                 }
             )
     )
+    .AllowAnonymous()
     .WithName("HealthCheck");
 
 app.Run();
