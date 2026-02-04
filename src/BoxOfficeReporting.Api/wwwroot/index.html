@@ -4,43 +4,62 @@
     <meta charset="utf-8" />
     <title>Box Office Reporting API</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        margin: 0;
-        background: #0b0b0b;
-        color: #e5e7eb;
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <script>
+      function decodeJWT(token) {
+        let base64Url = token.split(".")[1];
+        let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+        let jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split("")
+            .map(function (c) {
+              return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join(""),
+        );
+        return JSON.parse(jsonPayload);
       }
-      main {
-        max-width: 720px;
-        margin: 8vh auto;
-        padding: 24px;
+
+      function handleCredentialResponse(response) {
+        console.log("Encoded JWT ID token: " + response.credential);
+
+        const responsePayload = decodeJWT(response.credential);
+
+        console.log("Decoded JWT ID token fields:");
+        console.log("  Full Name: " + responsePayload.name);
+        console.log("  Given Name: " + responsePayload.given_name);
+        console.log("  Family Name: " + responsePayload.family_name);
+        console.log("  Unique ID: " + responsePayload.sub);
+        console.log("  Profile image URL: " + responsePayload.picture);
+        console.log("  Email: " + responsePayload.email);
       }
-      .card {
-        background: #2a170f;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 14px;
-        padding: 22px;
-      }
-      code {
-        background: #271811;
-        padding: 2px 6px;
-        border-radius: 6px;
-      }
-      a {
-        color: #93c5fd;
-      }
-    </style>
+    </script>
   </head>
   <body>
     <main>
-      <div class="card">
+      <div>
         <h1>🎬 Box Office Reporting API</h1>
         <p>
-          This will be the landing page for the application and will prompt the
-          user to login or sign up to begin.
+          This application is meant for the storage and analysis of box office
+          revenue by authorized users. Please sign in to visit the dashboard.
         </p>
-        <p>In the mean time, try: <code>/health</code></p>
+        <p>
+          <a href="/auth/login">
+            <button type="button" disabled>Sign in with Google</button>
+          </a>
+        </p>
+        <p>Sign in is currently under maintenance.</p>
+        <!-- g_id_onload contains Google Identity Services settings -->
+        <div
+          id="g_id_onload"
+          data-auto_prompt="false"
+          data-callback="handleCredentialResponse"
+          data-client_id="PUT_YOUR_WEB_CLIENT_ID_HERE"
+        ></div>
+        <!-- g_id_signin places the button on a page and supports customization -->
+        <div class="g_id_signin"></div>
+        <p>System status: <code>/health</code></p>
       </div>
     </main>
   </body>
