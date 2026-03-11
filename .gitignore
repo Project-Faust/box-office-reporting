@@ -1,4 +1,22 @@
+# Build output
 bin/
 obj/
-.env
+
+# Visual Studio / Rider / VS Code local files
 .vs/
+*.user
+*.suo
+
+# SQLite local database files
+*.db
+*.db-shm
+*.db-wal
+
+# App secrets / local config
+appsettings.Development.json
+secrets.json
+.env
+
+# OS noise
+.DS_Store
+Thumbs.db
