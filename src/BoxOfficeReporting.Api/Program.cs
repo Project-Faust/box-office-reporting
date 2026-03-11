@@ -1,26 +1,35 @@
+using BoxOfficeReporting.Api.Data;
+using BoxOfficeReporting.Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorPages();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// protect everything by default
-// builder.Services.AddAuthentication();
-// builder.Services.AddAuthorization(options =>
-// {
-    // options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-// });
+builder.Services
+.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+    options.SignIn.RequireConfirmedAccount = false;
+    })
+.AddEntityFrameworkStores<ApplicationDbContext>()
+  .AddDefaultTokenProviders();
 
-var app = builder.Build();
+  builder.Services.AddRazorPages();
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+  var app = builder.Build();
 
-app.UseRouting();
+  app.UseHttpsRedirection();
+  app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
+  app.UseRouting();
 
-app.MapRazorPages();
+  app.UseAuthentication();
+  app.UseAuthorization();
 
-app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
+  app.MapRazorPages();
 
-app.Run();
+  app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
+
+  app.Run();
