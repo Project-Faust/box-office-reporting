@@ -1,0 +1,22 @@
+@page
+@model BoxOfficeReporting.Api.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container py-4">
+    <h1 class="mb-3">Dashboard</h1>
+    <p class="text-muted">
+        Welcome to Box Office Reporting.
+    </p>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h2 class="h5">Quick Status</h2>
+            <p class="mb-2">The dashboard page is working.</p>
+            <p class="mb-0">
+                Current server time: <strong>@Model.CurrentTime</strong>
+            </p>
+        </div>
+    </div>
+</div>
