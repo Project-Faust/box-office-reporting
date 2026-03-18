@@ -2,6 +2,7 @@ using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,27 +10,37 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services
-.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    .AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
-    options.SignIn.RequireConfirmedAccount = false;
+        options.SignIn.RequireConfirmedAccount = false;
     })
-.AddEntityFrameworkStores<ApplicationDbContext>()
-  .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
-  builder.Services.AddRazorPages();
+builder.Services
+    .AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]
+            ?? throw new InvalidOperationException("Google ClientId is missing.");
 
-  var app = builder.Build();
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]
+            ?? throw new InvalidOperationException("Google ClientSecret is missing.");
+    });
 
-  app.UseHttpsRedirection();
-  app.UseStaticFiles();
+builder.Services.AddRazorPages();
 
-  app.UseRouting();
+var app = builder.Build();
 
-  app.UseAuthentication();
-  app.UseAuthorization();
+app.UseHttpsRedirection();
 
-  app.MapRazorPages();
+app.UseRouting();
 
-  app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
+app.UseAuthentication();
+app.UseAuthorization();
 
-  app.Run();
+app.MapRazorPages();
+
+app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
+
+app.Run();
