@@ -1,0 +1,65 @@
+@page
+@model BoxOfficeReporting.Api.Pages.Reports.IndexModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h1>Reports</h1>
+
+<p>
+    <a asp-page="Create">Add Report</a>
+</p>
+
+@if (Model.ReportEntries == null || !Model.ReportEntries.Any())
+{
+    <p>No reports have been created yet.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Tickets Sold</th>
+                <th>Price Per Ticket</th>
+                <th>Gross</th>
+                <th>Events</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var report in Model.ReportEntries)
+        {
+            <tr>
+                <td>@report.ReportDate.ToShortDateString()</td>
+                <td>@report.TicketsSold</td>
+                <td>@report.PricePerTicket.ToString("C")</td>
+                <td>@((report.TicketsSold * report.PricePerTicket).ToString("C"))</td>
+                <td>
+                    @if (report.Events != null && report.Events.Any())
+                    {
+                        <ul>
+                            @foreach (var ev in report.Events)
+                            {
+                                <li>
+                                    @ev.EventName - @ev.DeductionPercent%
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No events</span>
+                    }
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@report.Id">Edit</a>
+                    |
+                    <a asp-page="Delete" asp-route-id="@report.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
