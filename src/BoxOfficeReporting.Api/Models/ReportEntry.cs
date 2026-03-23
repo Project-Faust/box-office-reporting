@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace BoxOfficeReporting.Api.Models;
 
@@ -22,4 +23,11 @@ public class ReportEntry
     public decimal PricePerTicket { get; set; }
 
     public ICollection<ReportEvent> Events { get; set; } = new List<ReportEvent>();
+
+    public decimal Gross => TicketsSold * PricePerTicket;
+
+    public decimal TotalDeductionAmount =>
+      Events.Sum(e => Gross * (e.DeductionPercent / 100m));
+
+    public decimal Net => Gross - TotalDeductionAmount;
 }
