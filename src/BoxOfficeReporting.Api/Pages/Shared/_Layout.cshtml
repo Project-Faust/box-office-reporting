@@ -70,22 +70,23 @@
 
             <br/>
 
-            <a href="/">Home</a>
-            <a href="/Dashboard">Dashboard</a>
-            <a href="/Reports">Reports</a>
+            <a asp-page="/Index">Home</a>
+            <a asp-page="/Dashboard/Index">Dashboard</a>
+            <a asp-page="/Reports/Index">Reports</a>
         </div>
 
         <div class="auth">
             @if (User.Identity?.IsAuthenticated ?? false)
             {
-                <span>Welcome @User.Identity.Name</span>
-                <a href="/logout">Logout</a>
+                <span>Welcome<br/>@User.Identity.Name</span>
+
+                <form method="post" asp-page="/Account/Logout">
+                  <button type="submit">Logout</button>
+                </form>
             }
             else
             {
-                <a href="/login">
-                    <button>Sign in</button>
-                </a>
+                <a asp-page="/Account/Login">Sign in</a>
             }
         </div>
     </nav>
