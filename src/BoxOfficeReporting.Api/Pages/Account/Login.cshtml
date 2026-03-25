@@ -1,0 +1,11 @@
+@page
+@model BoxOfficeReporting.Api.Pages.Account.LoginModel
+@{
+  ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form method="post" asp-page-handler="Google">
+    <button type="submit">Sign in with Google</button>
+</form>
