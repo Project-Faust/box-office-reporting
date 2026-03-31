@@ -8,7 +8,7 @@
 <h1>Edit Report</h1>
 
 <form method="post">
-    <input type="hidden" asp-for="ReportEntry.Id" />
+    <input type="hidden" asp-for="Input.Id" />
 
     <div asp-validation-summary="ModelOnly"></div>
 
@@ -16,21 +16,21 @@
         <legend>Report Details</legend>
 
         <div>
-            <label asp-for="ReportEntry.ReportDate"></label><br />
-            <input asp-for="ReportEntry.ReportDate" />
-            <span asp-validation-for="ReportEntry.ReportDate"></span>
+            <label asp-for="Input.ReportDate"></label><br />
+            <input asp-for="Input.ReportDate" />
+            <span asp-validation-for="Input.ReportDate"></span>
         </div>
 
         <div>
-            <label asp-for="ReportEntry.TicketsSold"></label><br />
-            <input asp-for="ReportEntry.TicketsSold" />
-            <span asp-validation-for="ReportEntry.TicketsSold"></span>
+            <label asp-for="Input.TicketsSold"></label><br />
+            <input asp-for="Input.TicketsSold" />
+            <span asp-validation-for="Input.TicketsSold"></span>
         </div>
 
         <div>
-            <label asp-for="ReportEntry.PricePerTicket"></label><br />
-            <input asp-for="ReportEntry.PricePerTicket" />
-            <span asp-validation-for="ReportEntry.PricePerTicket"></span>
+            <label asp-for="Input.PricePerTicket"></label><br />
+            <input asp-for="Input.PricePerTicket" />
+            <span asp-validation-for="Input.PricePerTicket"></span>
         </div>
     </fieldset>
 
@@ -41,22 +41,24 @@
 
         <div>
             <strong>Event 1</strong><br />
-            <label asp-for="EventName1">Name</label><br />
-            <input asp-for="EventName1" /><br />
+            <label asp-for="Input.EventName1">Name</label><br />
+            <input asp-for="Input.EventName1" /><br />
 
-            <label asp-for="DeductionPercent1">Deduction %</label><br />
-            <input asp-for="DeductionPercent1" />
+            <label asp-for="Input.DeductionPercent1">Deduction %</label><br />
+            <input asp-for="Input.DeductionPercent1" />
+            <span asp-validation-for="Input.DeductionPercent1"></span>
         </div>
 
         <br />
 
         <div>
             <strong>Event 2</strong><br />
-            <label asp-for="EventName2">Name</label><br />
-            <input asp-for="EventName2" /><br />
+            <label asp-for="Input.EventName2">Name</label><br />
+            <input asp-for="Input.EventName2" /><br />
 
-            <label asp-for="DeductionPercent2">Deduction %</label><br />
-            <input asp-for="DeductionPercent2" />
+            <label asp-for="Input.DeductionPercent2">Deduction %</label><br />
+            <input asp-for="Input.DeductionPercent2" />
+            <span asp-validation-for="Input.DeductionPercent2"></span>
         </div>
     </fieldset>
 

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
@@ -19,19 +20,7 @@ public class EditModel : PageModel
     }
 
     [BindProperty]
-    public ReportEntry ReportEntry { get; set; } = new();
-
-    [BindProperty]
-    public string? EventName1 { get; set; }
-
-    [BindProperty]
-    public decimal? DeductionPercent1 { get; set; }
-
-    [BindProperty]
-    public string? EventName2 { get; set; }
-
-    [BindProperty]
-    public decimal? DeductionPercent2 { get; set; }
+    public EditReportInputModel Input { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
@@ -41,6 +30,10 @@ public class EditModel : PageModel
         }
 
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToPage("/Account/Login");
+        }
 
         var report = await _context
             .ReportEntries.Include(r => r.Events)
@@ -51,20 +44,23 @@ public class EditModel : PageModel
             return NotFound();
         }
 
-        ReportEntry = report;
+        Input.Id = report.Id;
+        Input.ReportDate = report.ReportDate;
+        Input.TicketsSold = report.TicketsSold;
+        Input.PricePerTicket = report.PricePerTicket;
 
         var events = report.Events.ToList();
 
         if (events.Count > 0)
         {
-            EventName1 = events[0].EventName;
-            DeductionPercent1 = events[0].DeductionPercent;
+            Input.EventName1 = events[0].EventName;
+            Input.DeductionPercent1 = events[0].DeductionPercent;
         }
 
         if (events.Count > 1)
         {
-            EventName2 = events[1].EventName;
-            DeductionPercent2 = events[1].DeductionPercent;
+            Input.EventName2 = events[1].EventName;
+            Input.DeductionPercent2 = events[1].DeductionPercent;
         }
 
         return Page();
@@ -78,10 +74,6 @@ public class EditModel : PageModel
             return RedirectToPage("/Account/Login");
         }
 
-        ModelState.Remove("ReportEntry.UserId");
-        ModelState.Remove("ReportEntry.User");
-        ModelState.Remove("ReportEntry.Events");
-
         if (!ModelState.IsValid)
         {
             return Page();
@@ -89,21 +81,22 @@ public class EditModel : PageModel
 
         var existingReport = await _context
             .ReportEntries.Include(r => r.Events)
-            .FirstOrDefaultAsync(r => r.Id == ReportEntry.Id && r.UserId == userId);
+            .FirstOrDefaultAsync(r => r.Id == Input.Id && r.UserId == userId);
 
         if (existingReport == null)
         {
             return NotFound();
         }
 
-        existingReport.ReportDate = ReportEntry.ReportDate;
-        existingReport.TicketsSold = ReportEntry.TicketsSold;
-        existingReport.PricePerTicket = ReportEntry.PricePerTicket;
+        existingReport.ReportDate = Input.ReportDate;
+        existingReport.TicketsSold = Input.TicketsSold;
+        existingReport.PricePerTicket = Input.PricePerTicket;
 
         _context.ReportEvents.RemoveRange(existingReport.Events);
+        existingReport.Events.Clear();
 
-        AddEventIfProvided(existingReport, EventName1, DeductionPercent1);
-        AddEventIfProvided(existingReport, EventName2, DeductionPercent2);
+        AddEventIfProvided(existingReport, Input.EventName1, Input.DeductionPercent1);
+        AddEventIfProvided(existingReport, Input.EventName2, Input.DeductionPercent2);
 
         await _context.SaveChangesAsync();
 
@@ -128,5 +121,26 @@ public class EditModel : PageModel
                 DeductionPercent = deductionPercent ?? 0,
             }
         );
+    }
+
+    public class EditReportInputModel
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime ReportDate { get; set; }
+
+        [Required]
+        public int TicketsSold { get; set; }
+
+        [Required]
+        public decimal PricePerTicket { get; set; }
+
+        public string? EventName1 { get; set; }
+        public decimal? DeductionPercent1 { get; set; }
+
+        public string? EventName2 { get; set; }
+        public decimal? DeductionPercent2 { get; set; }
     }
 }
