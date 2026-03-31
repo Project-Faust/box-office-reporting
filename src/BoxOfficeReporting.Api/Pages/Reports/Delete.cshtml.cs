@@ -18,8 +18,10 @@ public class DeleteModel : PageModel
         _context = context;
     }
 
-    [BindProperty]
     public ReportEntry ReportEntry { get; set; } = new();
+
+    [BindProperty]
+    public int Id { get; set; }
 
     public async Task<IActionResult> OnGetAsync(int? id)
     {
@@ -40,6 +42,7 @@ public class DeleteModel : PageModel
         }
 
         ReportEntry = report;
+        Id = report.Id;
 
         return Page();
     }
@@ -47,10 +50,14 @@ public class DeleteModel : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToPage("/Account/Login");
+        }
 
         var report = await _context
             .ReportEntries.Include(r => r.Events)
-            .FirstOrDefaultAsync(r => r.Id == ReportEntry.Id && r.UserId == userId);
+            .FirstOrDefaultAsync(r => r.Id == Id && r.UserId == userId);
 
         if (report == null)
         {
