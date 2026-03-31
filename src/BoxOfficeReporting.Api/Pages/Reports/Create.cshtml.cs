@@ -83,15 +83,36 @@ public class CreateModel : PageModel
         public DateTime ReportDate { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue, ErrorMessage = "Tickets sold cannot be negative.")]
         public int TicketsSold { get; set; }
 
         [Required]
+        [Range(
+            typeof(decimal),
+            "0",
+            "79228162514264337593543950335",
+            ErrorMessage = "Price per ticket cannot be negative."
+        )]
         public decimal PricePerTicket { get; set; }
 
         public string? EventName1 { get; set; }
+
+        [Range(
+            typeof(decimal),
+            "0",
+            "79228162514264337593543950335",
+            ErrorMessage = "Deduction percent cannot be negative."
+        )]
         public decimal? DeductionPercent1 { get; set; }
 
         public string? EventName2 { get; set; }
+
+        [Range(
+            typeof(decimal),
+            "0",
+            "79228162514264337593543950335",
+            ErrorMessage = "Deduction percent cannot be negative."
+        )]
         public decimal? DeductionPercent2 { get; set; }
     }
 }
