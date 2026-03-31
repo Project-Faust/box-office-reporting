@@ -8,7 +8,7 @@
 <h1>Reports</h1>
 
 <p>
-    <a asp-page="Create">Add Report</a>
+    <a asp-page="/Reports/Create">Add Report</a>
 </p>
 
 @if (Model.ReportEntries == null || !Model.ReportEntries.Any())
@@ -24,6 +24,8 @@ else
                 <th>Tickets Sold</th>
                 <th>Price Per Ticket</th>
                 <th>Gross</th>
+                <th>Total Deduction</th>
+                <th>Net</th>
                 <th>Events</th>
                 <th>Actions</th>
             </tr>
@@ -36,6 +38,9 @@ else
                 <td>@report.TicketsSold</td>
                 <td>@report.PricePerTicket.ToString("C")</td>
                 <td>@((report.TicketsSold * report.PricePerTicket).ToString("C"))</td>
+                <td>@report.Gross.ToString("C")</td>
+                <td>@report.TotalDeductionAmount.ToString("C")</td>
+                <td>@report.Net.ToString("C")</td>
                 <td>
                     @if (report.Events != null && report.Events.Any())
                     {

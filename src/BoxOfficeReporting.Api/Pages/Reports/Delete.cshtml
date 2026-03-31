@@ -1,0 +1,43 @@
+@page "{id:int}"
+@model BoxOfficeReporting.Api.Pages.Reports.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete Report";
+}
+
+<h1>Delete Report</h1>
+
+<p>Are you sure you want to delete this report?</p>
+
+<div>
+    <p><strong>Date:</strong> @Model.ReportEntry.ReportDate.ToShortDateString()</p>
+    <p><strong>Tickets Sold:</strong> @Model.ReportEntry.TicketsSold</p>
+    <p><strong>Price Per Ticket:</strong> @Model.ReportEntry.PricePerTicket.ToString("C")</p>
+    <p><strong>Gross:</strong> @Model.ReportEntry.Gross.ToString("C")</p>
+    <p><strong>Total Deduction:</strong> @Model.ReportEntry.TotalDeductionAmount.ToString("C")</p>
+    <p><strong>Net:</strong> @Model.ReportEntry.Net.ToString("C")</p>
+
+    <div>
+        <strong>Events:</strong>
+        @if (Model.ReportEntry.Events != null && Model.ReportEntry.Events.Any())
+        {
+            <ul>
+                @foreach (var ev in Model.ReportEntry.Events)
+                {
+                    <li>@ev.EventName - @ev.DeductionPercent%</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No events</p>
+        }
+    </div>
+</div>
+
+<form method="post">
+    <input type="hidden" asp-for="ReportEntry.Id" />
+
+    <button type="submit">Delete</button>
+    <a asp-page="/Reports/Index">Cancel</a>
+</form>
