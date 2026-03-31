@@ -32,12 +32,6 @@ public class CreateModel : PageModel
     [BindProperty]
     public decimal? DeductionPercent2 { get; set; }
 
-    [BindProperty]
-    public string? EventName3 { get; set; }
-
-    [BindProperty]
-    public decimal? DeductionPercent3 { get; set; }
-
     public void OnGet()
     {
         ReportEntry.ReportDate = DateTime.Today;
