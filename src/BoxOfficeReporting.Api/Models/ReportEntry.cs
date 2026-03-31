@@ -26,8 +26,7 @@ public class ReportEntry
 
     public decimal Gross => TicketsSold * PricePerTicket;
 
-    public decimal TotalDeductionAmount =>
-      Events.Sum(e => Gross * (e.DeductionPercent / 100m));
+    public decimal TotalDeductionAmount => Events.Sum(e => Gross * (e.DeductionPercent / 100m));
 
     public decimal Net => Gross - TotalDeductionAmount;
 }
