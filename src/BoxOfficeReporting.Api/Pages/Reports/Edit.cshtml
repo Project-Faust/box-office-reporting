@@ -1,0 +1,67 @@
+@page "{id:int}"
+@model BoxOfficeReporting.Api.Pages.Reports.EditModel
+
+@{
+    ViewData["Title"] = "Edit Report";
+}
+
+<h1>Edit Report</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="ReportEntry.Id" />
+
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <fieldset>
+        <legend>Report Details</legend>
+
+        <div>
+            <label asp-for="ReportEntry.ReportDate"></label><br />
+            <input asp-for="ReportEntry.ReportDate" />
+            <span asp-validation-for="ReportEntry.ReportDate"></span>
+        </div>
+
+        <div>
+            <label asp-for="ReportEntry.TicketsSold"></label><br />
+            <input asp-for="ReportEntry.TicketsSold" />
+            <span asp-validation-for="ReportEntry.TicketsSold"></span>
+        </div>
+
+        <div>
+            <label asp-for="ReportEntry.PricePerTicket"></label><br />
+            <input asp-for="ReportEntry.PricePerTicket" />
+            <span asp-validation-for="ReportEntry.PricePerTicket"></span>
+        </div>
+    </fieldset>
+
+    <hr />
+
+    <fieldset>
+        <legend>Events</legend>
+
+        <div>
+            <strong>Event 1</strong><br />
+            <label asp-for="EventName1">Name</label><br />
+            <input asp-for="EventName1" /><br />
+
+            <label asp-for="DeductionPercent1">Deduction %</label><br />
+            <input asp-for="DeductionPercent1" />
+        </div>
+
+        <br />
+
+        <div>
+            <strong>Event 2</strong><br />
+            <label asp-for="EventName2">Name</label><br />
+            <input asp-for="EventName2" /><br />
+
+            <label asp-for="DeductionPercent2">Deduction %</label><br />
+            <input asp-for="DeductionPercent2" />
+        </div>
+    </fieldset>
+
+    <br />
+
+    <button type="submit">Save Changes</button>
+    <a asp-page="/Reports/Index">Cancel</a>
+</form>

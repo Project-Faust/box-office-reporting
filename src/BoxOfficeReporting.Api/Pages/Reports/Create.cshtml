@@ -1,0 +1,69 @@
+@page
+@model BoxOfficeReporting.Api.Pages.Reports.CreateModel
+
+@{
+  ViewData["Title"] = "Create Report";
+}
+
+<h1>Create Report</h1>
+
+<form method="post">
+<div asp-validation-summary="ModelOnly"></div>
+
+<div>
+<label asp-for="ReportEntry.ReportDate"></label>
+<input asp-for="ReportEntry.ReportDate" />
+<span asp-validation-for="ReportEntry.ReportDate"></span>
+</div>
+
+<div>
+<label asp-for="ReportEntry.TicketsSold"></label>
+<input asp-for="ReportEntry.TicketsSold" />
+<span asp-validation-for="ReportEntry.TicketsSold"></span>
+</div>
+
+<div>
+<label asp-for="ReportEntry.PricePerTicket"></label>
+<input asp-for="ReportEntry.PricePerTicket" />
+<span asp-validation-for="ReportEntry.PricePerTicket"></span>
+</div>
+
+<hr />
+
+<h2>Events</h2>
+
+<div>
+<h3>Event 1</h3>
+<div>
+<label asp-for="EventName1">Event Name</label>
+<input asp-for="EventName1" />
+</div>
+<div>
+<label asp-for="DeductionPercent1">Deduction Percent</label>
+<input asp-for="DeductionPercent1" />
+</div>
+</div>
+
+<div>
+<h3>Event 2</h3>
+<div>
+<label asp-for="EventName2">Event Name</label>
+<input asp-for="EventName2" />
+</div>
+<div>
+<label asp-for="DeductionPercent2">Deduction Percent</label>
+<input asp-for="DeductionPercent2" />
+</div>
+</div>
+
+<div>
+<button type="submit">Save</button>
+<a asp-page="Index">Cancel</a>
+</div>
+</form>
+
+@*
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+*@
