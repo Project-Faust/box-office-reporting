@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h2 class="h5">This Week</h2>
+                    <h2 class="h5">Last 7 Days</h2>
                     <p class="mb-1"><strong>Reports:</strong> @Model.WeekSummary.TotalReports</p>
                     <p class="mb-1"><strong>Tickets:</strong> @Model.WeekSummary.TotalTicketsSold</p>
                     <p class="mb-1"><strong>Gross:</strong> @Model.WeekSummary.TotalGross.ToString("C")</p>
@@ -25,7 +25,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h2 class="h5">This Month</h2>
+                    <h2 class="h5">Last 30 Days</h2>
                     <p class="mb-1"><strong>Reports:</strong> @Model.MonthSummary.TotalReports</p>
                     <p class="mb-1"><strong>Tickets:</strong> @Model.MonthSummary.TotalTicketsSold</p>
                     <p class="mb-1"><strong>Gross:</strong> @Model.MonthSummary.TotalGross.ToString("C")</p>
@@ -48,41 +48,112 @@
             </div>
         </div>
     </div>
+  @if (Model.Last30Days == null || !Model.Last30Days.Any())
+  {
+     <div class="card shadow-sm">
+          <div class="card-body">
+              <h2 class="h5 mb-3">Recent 30-Day Trends</h2>
+              <p class="mb-0 text-muted">No report data is available yet.</p>
+          </div>
+      </div>
+  }
+  else
+  {
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3">Revenue - Last 30 Days</h2>
+              <canvas id="netTrendChart"></canvas>
+             </div>
+           </div>
+        </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h2 class="h5 mb-3">Recent 30-Day Trend Data</h2>
-
-            @if (Model.Last30Days == null || !Model.Last30Days.Any())
-            {
-                <p class="mb-0 text-muted">No report data is available yet.</p>
-            }
-            else
-            {
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Tickets</th>
-                            <th>Gross</th>
-                            <th>Deductions</th>
-                            <th>Net</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var day in Model.Last30Days)
-                        {
-                            <tr>
-                                <td>@day.Label</td>
-                                <td>@day.TicketsSold</td>
-                                <td>@day.Gross.ToString("C")</td>
-                                <td>@day.TotalDeductions.ToString("C")</td>
-                                <td>@day.Net.ToString("C")</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+        <div class="col-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h2 class="h5 mb-3">Tickets Sold - Last 30 Days</h2>
+              <canvas id="ticketsTrendChart"></canvas>
+            </div>
+          </div>
         </div>
     </div>
-</div>
+  }
+  </div>
+
+  @section Scripts {
+    @if (Model.Last30Days != null && Model.Last30Days.Any())
+    {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const labels = @Html.Raw(Model.Last30DayLabelsJson);
+            const ticketsData = @Html.Raw(Model.Last30DayTicketsJson);
+            const netData = @Html.Raw(Model.Last30DayNetJson);
+            const grossData = @Html.Raw(Model.Last30DayGrossJson);
+
+            const netCtx = document.getElementById('netTrendChart');
+
+            new Chart(netCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Revenue',
+                        data: netData,
+                        tension: 0.2
+                    },
+                    {
+                        label: 'Gross Revenue',
+                        data: grossData,
+                        tension: 0.2
+                      }]
+                },
+                options: {
+    responsive: true,
+    scales: {
+        y: {
+            ticks: {
+                callback: function(value) {
+                    return '$' + value;
+                }
+            }
+        }
+    },
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: function(context) {
+                    return '$' + context.raw.toLocaleString();
+                }
+            }
+        }
+    }
+}
+            });
+
+            const ticketsCtx = document.getElementById('ticketsTrendChart');
+            new Chart(ticketsCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tickets Sold',
+                        data: ticketsData
+                    }]
+                },
+                options: {
+    responsive: true,
+    plugins: {
+        tooltip: {
+            callbacks: {
+                label: function(context) {
+                    return 'Tickets: ' + context.raw;
+                }
+            }
+        }
+    }
+}
+            });
+        </script>
+    }
+}

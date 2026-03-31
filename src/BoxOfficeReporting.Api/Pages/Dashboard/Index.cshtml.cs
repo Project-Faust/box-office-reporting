@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Json;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,11 @@ namespace BoxOfficeReporting.Api.Pages.Dashboard;
 public class IndexModel : PageModel
 {
     private readonly ApplicationDbContext _context;
+
+    public string Last30DayLabelsJson { get; set; } = "[]";
+    public string Last30DayTicketsJson { get; set; } = "[]";
+    public string Last30DayNetJson { get; set; } = "[]";
+    public string Last30DayGrossJson { get; set; } = "[]";
 
     public IndexModel(ApplicationDbContext context)
     {
@@ -60,6 +66,11 @@ public class IndexModel : PageModel
                 Net = r.Net,
             })
             .ToList();
+
+        Last30DayLabelsJson = JsonSerializer.Serialize(Last30Days.Select(d => d.Label));
+        Last30DayTicketsJson = JsonSerializer.Serialize(Last30Days.Select(d => d.TicketsSold));
+        Last30DayNetJson = JsonSerializer.Serialize(Last30Days.Select(d => d.Net));
+        Last30DayGrossJson = JsonSerializer.Serialize(Last30Days.Select(d => d.Gross));
     }
 
     private static DashboardSummaryViewModel BuildSummary(IEnumerable<ReportEntry> reports)
