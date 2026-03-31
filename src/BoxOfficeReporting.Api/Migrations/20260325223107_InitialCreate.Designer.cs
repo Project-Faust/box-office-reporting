@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoxOfficeReporting.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260311172658_InitialCreate")]
+    [Migration("20260325223107_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
