@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
@@ -18,23 +19,11 @@ public class CreateModel : PageModel
     }
 
     [BindProperty]
-    public ReportEntry ReportEntry { get; set; } = new();
-
-    [BindProperty]
-    public string? EventName1 { get; set; }
-
-    [BindProperty]
-    public decimal? DeductionPercent1 { get; set; }
-
-    [BindProperty]
-    public string? EventName2 { get; set; }
-
-    [BindProperty]
-    public decimal? DeductionPercent2 { get; set; }
+    public CreateReportInputModel Input { get; set; } = new();
 
     public void OnGet()
     {
-        ReportEntry.ReportDate = DateTime.Today;
+        Input.ReportDate = DateTime.Today;
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -45,38 +34,64 @@ public class CreateModel : PageModel
             return RedirectToPage("/Account/Login");
         }
 
-        ReportEntry.UserId = userId;
-
-        ModelState.Remove("ReportEntry.UserId");
-        ModelState.Remove("ReportEntry.User");
-
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        AddEventIfProvided(EventName1, DeductionPercent1);
-        AddEventIfProvided(EventName2, DeductionPercent2);
+        var reportEntry = new ReportEntry
+        {
+            UserId = userId,
+            ReportDate = Input.ReportDate,
+            TicketsSold = Input.TicketsSold,
+            PricePerTicket = Input.PricePerTicket,
+        };
 
-        _context.ReportEntries.Add(ReportEntry);
+        AddEventIfProvided(reportEntry, Input.EventName1, Input.DeductionPercent1);
+        AddEventIfProvided(reportEntry, Input.EventName2, Input.DeductionPercent2);
+
+        _context.ReportEntries.Add(reportEntry);
         await _context.SaveChangesAsync();
 
         return RedirectToPage("Index");
     }
 
-    private void AddEventIfProvided(string? eventName, decimal? deductionPercent)
+    private static void AddEventIfProvided(
+        ReportEntry reportEntry,
+        string? eventName,
+        decimal? deductionPercent
+    )
     {
         if (string.IsNullOrWhiteSpace(eventName))
         {
             return;
         }
 
-        ReportEntry.Events.Add(
+        reportEntry.Events.Add(
             new ReportEvent
             {
                 EventName = eventName.Trim(),
                 DeductionPercent = deductionPercent ?? 0,
             }
         );
+    }
+
+    public class CreateReportInputModel
+    {
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime ReportDate { get; set; }
+
+        [Required]
+        public int TicketsSold { get; set; }
+
+        [Required]
+        public decimal PricePerTicket { get; set; }
+
+        public string? EventName1 { get; set; }
+        public decimal? DeductionPercent1 { get; set; }
+
+        public string? EventName2 { get; set; }
+        public decimal? DeductionPercent2 { get; set; }
     }
 }
