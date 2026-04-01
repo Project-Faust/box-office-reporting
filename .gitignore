@@ -1,6 +1,7 @@
 # Build output
 bin/
 obj/
+keys/
 
 # Visual Studio / Rider / VS Code local files
 .vs/
