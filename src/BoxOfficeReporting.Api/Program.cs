@@ -2,7 +2,6 @@ using System.Globalization;
 using System.IO;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,17 @@ var keysPath = builder.Environment.IsDevelopment()
     ? Path.Combine(builder.Environment.ContentRootPath, "keys")
     : "/app/keys";
 
-builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(keysPath));
+Directory.CreateDirectory(keysPath);
+
+var dataProtectionBuilder = builder
+    .Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
+    .SetApplicationName("BoxOfficeReporting");
+
+if (OperatingSystem.IsWindows() && builder.Environment.IsDevelopment())
+{
+    dataProtectionBuilder.ProtectKeysWithDpapi();
+}
 
 builder
     .Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
