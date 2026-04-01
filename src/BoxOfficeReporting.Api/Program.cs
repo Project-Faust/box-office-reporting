@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.IO;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
@@ -5,6 +6,10 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+var culture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = culture;
+CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var builder = WebApplication.CreateBuilder(args);
 
