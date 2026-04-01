@@ -5,62 +5,101 @@
     ViewData["Title"] = "Create Report";
 }
 
-<h1>Create Report</h1>
-
-<form method="post">
-    <div asp-validation-summary="ModelOnly"></div>
-
+<div class="page-header">
     <div>
-        <label asp-for="Input.ReportDate"></label>
-        <input asp-for="Input.ReportDate" />
-        <span asp-validation-for="Input.ReportDate"></span>
+        <p class="eyebrow">Reporting</p>
+        <h1 class="page-title">Create Report</h1>
+        <p class="page-intro">Enter ticket sales, pricing, and per-event deduction details for a reporting date.</p>
     </div>
 
-    <div>
-        <label asp-for="Input.TicketsSold"></label>
-        <input asp-for="Input.TicketsSold" />
-        <span asp-validation-for="Input.TicketsSold"></span>
+    <div class="page-actions">
+        <a asp-page="Index" class="btn btn-secondary">Back to Reports</a>
     </div>
+</div>
 
-    <div>
-        <label asp-for="Input.PricePerTicket"></label>
-        <input asp-for="Input.PricePerTicket" />
-        <span asp-validation-for="Input.PricePerTicket"></span>
-    </div>
+<form method="post" class="report-form">
+    <div asp-validation-summary="ModelOnly" class="validation-summary-errors form-alert"></div>
 
-    <hr />
-
-    <h2>Events</h2>
-
-    <div>
-        <h3>Event 1</h3>
-        <div>
-            <label asp-for="Input.EventName1">Event Name</label>
-            <input asp-for="Input.EventName1" />
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Base Details</p>
+                <h2>Report Information</h2>
+            </div>
         </div>
-        <div>
-            <label asp-for="Input.DeductionPercent1">Deduction Percent</label>
-            <input asp-for="Input.DeductionPercent1" />
-            <span asp-validation-for="Input.DeductionPercent1"></span>
-        </div>
-    </div>
 
-    <div>
-        <h3>Event 2</h3>
-        <div>
-            <label asp-for="Input.EventName2">Event Name</label>
-            <input asp-for="Input.EventName2" />
-        </div>
-        <div>
-            <label asp-for="Input.DeductionPercent2">Deduction Percent</label>
-            <input asp-for="Input.DeductionPercent2" />
-            <span asp-validation-for="Input.DeductionPercent2"></span>
-        </div>
-    </div>
+        <div class="form-grid">
+            <div class="field-group">
+                <label asp-for="Input.ReportDate"></label>
+                <input asp-for="Input.ReportDate" />
+                <span asp-validation-for="Input.ReportDate" class="field-validation-error"></span>
+            </div>
 
-    <div>
-        <button type="submit">Save</button>
-        <a asp-page="Index">Cancel</a>
+            <div class="field-group">
+                <label asp-for="Input.TicketsSold"></label>
+                <input asp-for="Input.TicketsSold" />
+                <span asp-validation-for="Input.TicketsSold" class="field-validation-error"></span>
+            </div>
+
+            <div class="field-group">
+                <label asp-for="Input.PricePerTicket"></label>
+                <input asp-for="Input.PricePerTicket" />
+                <span asp-validation-for="Input.PricePerTicket" class="field-validation-error"></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Events</p>
+                <h2>Per-Event Deductions</h2>
+                <p class="section-intro">Leave unused event fields blank when only one event applies.</p>
+            </div>
+        </div>
+
+        <div class="event-card-grid">
+            <section class="event-card">
+                <div class="event-card-header">
+                    <h3>Event 1</h3>
+                    <p>Primary event details</p>
+                </div>
+
+                <div class="field-group">
+                    <label asp-for="Input.EventName1">Event Name</label>
+                    <input asp-for="Input.EventName1" />
+                </div>
+
+                <div class="field-group">
+                    <label asp-for="Input.DeductionPercent1">Deduction Percent</label>
+                    <input asp-for="Input.DeductionPercent1" />
+                    <span asp-validation-for="Input.DeductionPercent1" class="field-validation-error"></span>
+                </div>
+            </section>
+
+            <section class="event-card">
+                <div class="event-card-header">
+                    <h3>Event 2</h3>
+                    <p>Secondary event details</p>
+                </div>
+
+                <div class="field-group">
+                    <label asp-for="Input.EventName2">Event Name</label>
+                    <input asp-for="Input.EventName2" />
+                </div>
+
+                <div class="field-group">
+                    <label asp-for="Input.DeductionPercent2">Deduction Percent</label>
+                    <input asp-for="Input.DeductionPercent2" />
+                    <span asp-validation-for="Input.DeductionPercent2" class="field-validation-error"></span>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Report</button>
+        <a asp-page="Index" class="btn btn-secondary">Cancel</a>
     </div>
 </form>
 

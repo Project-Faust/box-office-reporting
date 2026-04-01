@@ -4,98 +4,50 @@
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Box Office Reporting</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <style>
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-            margin: 0;
-            background: #111;
-            color: #eee;
-        }
-
-        header {
-            background: #1a1a1a;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid #333;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav a {
-            color: #ddd;
-            text-decoration: none;
-            margin-right: 1rem;
-        }
-
-        nav a:hover {
-            color: white;
-        }
-
-        main {
-            padding: 2rem;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .auth {
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        button {
-            padding: 0.5rem 1rem;
-            background: #444;
-            border: none;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/index.css" />
 </head>
 
 <body>
+    <header class="site-header">
+        <div class="header-shell">
+            <div class="topbar">
+                <div class="brand-block">
+                    <div class="brand">🎬 Box Office Reporting</div>
+                    <div class="brand-subtitle">Internal reporting and revenue tracking</div>
+                </div>
 
-<header>
-    <nav>
-        <div>
-            <strong>🎬 Box Office Reporting</strong>
+                <div class="auth-panel">
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <div class="user-chip">
+                            <span class="user-chip-label">Signed in as</span>
+                            <span class="user-chip-name">@User.Identity.Name</span>
+                        </div>
 
-            <br/>
+                        <form method="post" asp-page="/Account/Logout" class="auth-form">
+                            <button type="submit">Logout</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-page="/Account/Login" class="btn btn-secondary">Sign in</a>
+                    }
+                </div>
+            </div>
 
-            <a asp-page="/Index">Home</a>
-            <a asp-page="/Dashboard/Index">Dashboard</a>
-            <a asp-page="/Reports/Index">Reports</a>
+            <nav class="nav-row" aria-label="Primary">
+                <a asp-page="/Index" class="nav-link">Home</a>
+                <a asp-page="/Dashboard/Index" class="nav-link">Dashboard</a>
+                <a asp-page="/Reports/Index" class="nav-link">Reports</a>
+            </nav>
         </div>
+    </header>
 
-        <div class="auth">
-            @if (User.Identity?.IsAuthenticated ?? false)
-            {
-                <span>Welcome<br/>@User.Identity.Name</span>
-
-                <form method="post" asp-page="/Account/Logout">
-                  <button type="submit">Logout</button>
-                </form>
-            }
-            else
-            {
-                <a asp-page="/Account/Login">Sign in</a>
-            }
+    <main class="page-shell">
+        <div class="page-card">
+            @RenderBody()
         </div>
-    </nav>
-</header>
-
-<main>
-    @RenderBody()
-    @RenderSection("Scripts", required: false)
-</main>
-
+        @RenderSection("Scripts", required: false)
+    </main>
 </body>
 </html>

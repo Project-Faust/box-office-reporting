@@ -5,83 +5,147 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="container py-4">
-    <h1 class="mb-4">Dashboard</h1>
-
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5">Last 7 Days</h2>
-                    <p class="mb-1"><strong>Reports:</strong> @Model.WeekSummary.TotalReports</p>
-                    <p class="mb-1"><strong>Tickets:</strong> @Model.WeekSummary.TotalTicketsSold</p>
-                    <p class="mb-1"><strong>Gross:</strong> @Model.WeekSummary.TotalGross.ToString("C")</p>
-                    <p class="mb-1"><strong>Deductions:</strong> @Model.WeekSummary.TotalDeductions.ToString("C")</p>
-                    <p class="mb-0"><strong>Net:</strong> @Model.WeekSummary.TotalNet.ToString("C")</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5">Last 30 Days</h2>
-                    <p class="mb-1"><strong>Reports:</strong> @Model.MonthSummary.TotalReports</p>
-                    <p class="mb-1"><strong>Tickets:</strong> @Model.MonthSummary.TotalTicketsSold</p>
-                    <p class="mb-1"><strong>Gross:</strong> @Model.MonthSummary.TotalGross.ToString("C")</p>
-                    <p class="mb-1"><strong>Deductions:</strong> @Model.MonthSummary.TotalDeductions.ToString("C")</p>
-                    <p class="mb-0"><strong>Net:</strong> @Model.MonthSummary.TotalNet.ToString("C")</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5">This Year</h2>
-                    <p class="mb-1"><strong>Reports:</strong> @Model.YearSummary.TotalReports</p>
-                    <p class="mb-1"><strong>Tickets:</strong> @Model.YearSummary.TotalTicketsSold</p>
-                    <p class="mb-1"><strong>Gross:</strong> @Model.YearSummary.TotalGross.ToString("C")</p>
-                    <p class="mb-1"><strong>Deductions:</strong> @Model.YearSummary.TotalDeductions.ToString("C")</p>
-                    <p class="mb-0"><strong>Net:</strong> @Model.YearSummary.TotalNet.ToString("C")</p>
-                </div>
-            </div>
-        </div>
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Overview</p>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-intro">Quick summaries and recent trends for reports, revenue, deductions, and ticket activity.</p>
     </div>
-  @if (Model.Last30Days == null || !Model.Last30Days.Any())
-  {
-     <div class="card shadow-sm">
-          <div class="card-body">
-              <h2 class="h5 mb-3">Recent 30-Day Trends</h2>
-              <p class="mb-0 text-muted">No report data is available yet.</p>
-          </div>
-      </div>
-  }
-  else
-  {
-      <div class="row g-3">
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h2 class="h5 mb-3">Revenue - Last 30 Days</h2>
-              <canvas id="netTrendChart"></canvas>
-             </div>
-           </div>
+</div>
+
+<section class="dashboard-summary-grid">
+    <article class="summary-panel">
+        <div class="summary-panel-header">
+            <p class="eyebrow">Snapshot</p>
+            <h2>Last 7 Days</h2>
         </div>
 
-        <div class="col-12">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h2 class="h5 mb-3">Tickets Sold - Last 30 Days</h2>
-              <canvas id="ticketsTrendChart"></canvas>
+        <div class="summary-stat-list">
+            <div class="summary-stat-row">
+                <span>Reports</span>
+                <strong>@Model.WeekSummary.TotalReports</strong>
             </div>
-          </div>
+            <div class="summary-stat-row">
+                <span>Tickets</span>
+                <strong>@Model.WeekSummary.TotalTicketsSold</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Gross</span>
+                <strong>@Model.WeekSummary.TotalGross.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Deductions</span>
+                <strong>@Model.WeekSummary.TotalDeductions.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row summary-stat-row-net">
+                <span>Net</span>
+                <strong>@Model.WeekSummary.TotalNet.ToString("C")</strong>
+            </div>
         </div>
-    </div>
-  }
-  </div>
+    </article>
 
-  @section Scripts {
+    <article class="summary-panel">
+        <div class="summary-panel-header">
+            <p class="eyebrow">Snapshot</p>
+            <h2>Last 30 Days</h2>
+        </div>
+
+        <div class="summary-stat-list">
+            <div class="summary-stat-row">
+                <span>Reports</span>
+                <strong>@Model.MonthSummary.TotalReports</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Tickets</span>
+                <strong>@Model.MonthSummary.TotalTicketsSold</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Gross</span>
+                <strong>@Model.MonthSummary.TotalGross.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Deductions</span>
+                <strong>@Model.MonthSummary.TotalDeductions.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row summary-stat-row-net">
+                <span>Net</span>
+                <strong>@Model.MonthSummary.TotalNet.ToString("C")</strong>
+            </div>
+        </div>
+    </article>
+
+    <article class="summary-panel">
+        <div class="summary-panel-header">
+            <p class="eyebrow">Snapshot</p>
+            <h2>This Year</h2>
+        </div>
+
+        <div class="summary-stat-list">
+            <div class="summary-stat-row">
+                <span>Reports</span>
+                <strong>@Model.YearSummary.TotalReports</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Tickets</span>
+                <strong>@Model.YearSummary.TotalTicketsSold</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Gross</span>
+                <strong>@Model.YearSummary.TotalGross.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row">
+                <span>Deductions</span>
+                <strong>@Model.YearSummary.TotalDeductions.ToString("C")</strong>
+            </div>
+            <div class="summary-stat-row summary-stat-row-net">
+                <span>Net</span>
+                <strong>@Model.YearSummary.TotalNet.ToString("C")</strong>
+            </div>
+        </div>
+    </article>
+</section>
+
+@if (Model.Last30Days == null || !Model.Last30Days.Any())
+{
+    <section class="empty-state">
+        <h2>No recent trend data</h2>
+        <p>No report data is available yet.</p>
+    </section>
+}
+else
+{
+    <section class="chart-section">
+        <article class="chart-panel">
+            <div class="chart-panel-header">
+                <div>
+                    <p class="eyebrow">Trend</p>
+                    <h2>Revenue - Last 30 Days</h2>
+                    <p class="chart-intro">Compare gross revenue against net revenue over the last 30 days.</p>
+                </div>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="netTrendChart"></canvas>
+            </div>
+        </article>
+
+        <article class="chart-panel">
+            <div class="chart-panel-header">
+                <div>
+                    <p class="eyebrow">Trend</p>
+                    <h2>Tickets Sold - Last 30 Days</h2>
+                    <p class="chart-intro">Daily ticket volume across the most recent reporting period.</p>
+                </div>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="ticketsTrendChart"></canvas>
+            </div>
+        </article>
+    </section>
+}
+
+@section Scripts {
     @if (Model.Last30Days != null && Model.Last30Days.Any())
     {
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -91,68 +155,137 @@
             const netData = @Html.Raw(Model.Last30DayNetJson);
             const grossData = @Html.Raw(Model.Last30DayGrossJson);
 
-            const netCtx = document.getElementById('netTrendChart');
+            const chartTextColor = "#f5f5f5";
+            const chartMutedColor = "#a3a3a3";
+            const chartGridColor = "rgba(255, 255, 255, 0.08)";
+            const chartAccent = "#d4a373";
+            const chartAccentSoft = "rgba(212, 163, 115, 0.20)";
+            const chartNeutral = "#d6d3d1";
+            const chartNeutralSoft = "rgba(214, 211, 209, 0.18)";
+
+            const netCtx = document.getElementById("netTrendChart");
 
             new Chart(netCtx, {
-                type: 'line',
+                type: "line",
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Net Revenue',
-                        data: netData,
-                        tension: 0.2
-                    },
-                    {
-                        label: 'Gross Revenue',
-                        data: grossData,
-                        tension: 0.2
-                      }]
+                    datasets: [
+                        {
+                            label: "Net Revenue",
+                            data: netData,
+                            tension: 0.25,
+                            borderColor: chartAccent,
+                            backgroundColor: chartAccentSoft,
+                            fill: false
+                        },
+                        {
+                            label: "Gross Revenue",
+                            data: grossData,
+                            tension: 0.25,
+                            borderColor: chartNeutral,
+                            backgroundColor: chartNeutralSoft,
+                            fill: false
+                        }
+                    ]
                 },
                 options: {
-    responsive: true,
-    scales: {
-        y: {
-            ticks: {
-                callback: function(value) {
-                    return '$' + value;
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: "index",
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: chartTextColor
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ": $" + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: chartMutedColor
+                            },
+                            grid: {
+                                color: chartGridColor
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: chartMutedColor,
+                                callback: function(value) {
+                                    return "$" + value;
+                                }
+                            },
+                            grid: {
+                                color: chartGridColor
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    },
-    plugins: {
-        tooltip: {
-            callbacks: {
-                label: function(context) {
-                    return '$' + context.raw.toLocaleString();
-                }
-            }
-        }
-    }
-}
             });
 
-            const ticketsCtx = document.getElementById('ticketsTrendChart');
+            const ticketsCtx = document.getElementById("ticketsTrendChart");
+
             new Chart(ticketsCtx, {
-                type: 'bar',
+                type: "bar",
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Tickets Sold',
-                        data: ticketsData
-                    }]
+                    datasets: [
+                        {
+                            label: "Tickets Sold",
+                            data: ticketsData,
+                            backgroundColor: chartAccentSoft,
+                            borderColor: chartAccent,
+                            borderWidth: 1.5
+                        }
+                    ]
                 },
                 options: {
-    responsive: true,
-    plugins: {
-        tooltip: {
-            callbacks: {
-                label: function(context) {
-                    return 'Tickets: ' + context.raw;
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: chartTextColor
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return "Tickets: " + context.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: chartMutedColor
+                            },
+                            grid: {
+                                color: chartGridColor
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: chartMutedColor
+                            },
+                            grid: {
+                                color: chartGridColor
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
-}
             });
         </script>
     }

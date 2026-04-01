@@ -5,125 +5,160 @@
     ViewData["Title"] = "Reports";
 }
 
-<h1>Reports</h1>
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Reporting</p>
+        <h1 class="page-title">Reports</h1>
+        <p class="page-intro">View revenue history, filter by time range, and manage report entries.</p>
+    </div>
 
-<p>
-    <a asp-page="/Reports/Create">Add Report</a>
-</p>
+    <div class="page-actions">
+        <a asp-page="/Reports/Create" class="btn btn-primary">Add Report</a>
+    </div>
+</div>
 
-<form method="get">
-    <label asp-for="Range">View:</label>
-    <select asp-for="Range" onchange="this.form.submit()">
-        <option value="7days">Last 7 Days</option>
-        <option value="30days">Last 30 Days</option>
-        <option value="year">Calendar Year</option>
-        <option value="all">All Time</option>
-    </select>
+<section class="panel-section">
+    <form method="get" class="filters-form">
+        <div class="field-group field-group-sm">
+            <label asp-for="Range">View</label>
+            <select asp-for="Range" onchange="this.form.submit()">
+                <option value="7days">Last 7 Days</option>
+                <option value="30days">Last 30 Days</option>
+                <option value="year">Calendar Year</option>
+                <option value="all">All Time</option>
+            </select>
+        </div>
 
-    @if (Model.Range == "year" && Model.AvailableYears.Any())
-    {
-        <label asp-for="Year">Year:</label>
-        <select asp-for="Year" onchange="this.form.submit()">
-            @foreach (var year in Model.AvailableYears)
-            {
-                <option value="@year">@year</option>
-            }
-        </select>
-    }
+        @if (Model.Range == "year" && Model.AvailableYears.Any())
+        {
+            <div class="field-group field-group-sm">
+                <label asp-for="Year">Year</label>
+                <select asp-for="Year" onchange="this.form.submit()">
+                    @foreach (var year in Model.AvailableYears)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+            </div>
+        }
 
-    <noscript>
-        <button type="submit">Apply</button>
-    </noscript>
-</form>
-
-<hr />
-
-<section>
-    <h2>Summary</h2>
-    <dl>
-        <dt>Total Reports</dt>
-        <dd>@Model.Summary.TotalReports</dd>
-
-        <dt>Total Tickets Sold</dt>
-        <dd>@Model.Summary.TotalTicketsSold</dd>
-
-        <dt>Gross</dt>
-        <dd>@Model.Summary.TotalGross.ToString("C")</dd>
-
-        <dt>Total Deductions</dt>
-        <dd>@Model.Summary.TotalDeductions.ToString("C")</dd>
-
-        <dt>Net</dt>
-        <dd>@Model.Summary.TotalNet.ToString("C")</dd>
-    </dl>
+        <noscript>
+            <div class="field-group field-group-sm field-group-button">
+                <label class="sr-only">Apply filters</label>
+                <button type="submit" class="btn btn-secondary">Apply</button>
+            </div>
+        </noscript>
+    </form>
 </section>
 
-<hr />
+<section class="summary-grid">
+    <article class="summary-card">
+        <span class="summary-label">Total Reports</span>
+        <strong class="summary-value">@Model.Summary.TotalReports</strong>
+    </article>
+
+    <article class="summary-card">
+        <span class="summary-label">Tickets Sold</span>
+        <strong class="summary-value">@Model.Summary.TotalTicketsSold</strong>
+    </article>
+
+    <article class="summary-card">
+        <span class="summary-label">Gross</span>
+        <strong class="summary-value">@Model.Summary.TotalGross.ToString("C")</strong>
+    </article>
+
+    <article class="summary-card">
+        <span class="summary-label">Deductions</span>
+        <strong class="summary-value">@Model.Summary.TotalDeductions.ToString("C")</strong>
+    </article>
+
+    <article class="summary-card summary-card-net">
+        <span class="summary-label">Net</span>
+        <strong class="summary-value">@Model.Summary.TotalNet.ToString("C")</strong>
+    </article>
+</section>
 
 @if (Model.ReportGroups == null || !Model.ReportGroups.Any())
 {
-    <p>No reports have been created yet for this selection.</p>
+    <section class="empty-state">
+        <h2>No reports found</h2>
+        <p>No reports have been created yet for this selection.</p>
+    </section>
 }
 else
 {
     @foreach (var group in Model.ReportGroups)
     {
-        <section>
-            <h2>@group.ReportDate.ToShortDateString()</h2>
+        <section class="report-group">
+            <div class="report-group-header">
+                <div>
+                    <p class="eyebrow">Report Date</p>
+                    <h2 class="report-date">@group.ReportDate.ToShortDateString()</h2>
+                </div>
 
-            <p>
-                <strong>Reports:</strong> @group.TotalReports
-                |
-                <strong>Tickets Sold:</strong> @group.TotalTicketsSold
-            </p>
+                <div class="report-group-meta">
+                    <div class="report-group-stat">
+                        <span class="report-group-stat-label">Reports</span>
+                        <strong>@group.TotalReports</strong>
+                    </div>
+                    <div class="report-group-stat">
+                        <span class="report-group-stat-label">Tickets Sold</span>
+                        <strong>@group.TotalTicketsSold</strong>
+                    </div>
+                </div>
+            </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tickets Sold</th>
-                        <th>Price Per Ticket</th>
-                        <th>Gross</th>
-                        <th>Total Deduction</th>
-                        <th>Net</th>
-                        <th>Events</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var report in group.Entries)
-                {
-                    <tr>
-                        <td>@report.TicketsSold</td>
-                        <td>@report.PricePerTicket.ToString("C")</td>
-                        <td>@report.Gross.ToString("C")</td>
-                        <td>@report.TotalDeductionAmount.ToString("C")</td>
-                        <td>@report.Net.ToString("C")</td>
-                        <td>
-                            @if (report.Events != null && report.Events.Any())
-                            {
-                                <ul>
-                                    @foreach (var ev in report.Events)
+            <div class="table-wrap">
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>Tickets Sold</th>
+                            <th>Price / Ticket</th>
+                            <th>Gross</th>
+                            <th>Deductions</th>
+                            <th>Net</th>
+                            <th>Events</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in group.Entries)
+                        {
+                            <tr>
+                                <td class="numeric">@report.TicketsSold</td>
+                                <td class="numeric">@report.PricePerTicket.ToString("C")</td>
+                                <td class="numeric">@report.Gross.ToString("C")</td>
+                                <td class="numeric">@report.TotalDeductionAmount.ToString("C")</td>
+                                <td class="numeric net-value">@report.Net.ToString("C")</td>
+                                <td>
+                                    @if (report.Events != null && report.Events.Any())
                                     {
-                                        <li>@ev.EventName - @ev.DeductionPercent%</li>
+                                        <ul class="event-list">
+                                            @foreach (var ev in report.Events)
+                                            {
+                                                <li>
+                                                    <span class="event-name">@ev.EventName</span>
+                                                    <span class="event-percent">@ev.DeductionPercent%</span>
+                                                </li>
+                                            }
+                                        </ul>
                                     }
-                                </ul>
-                            }
-                            else
-                            {
-                                <span>No events</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-page="Edit" asp-route-id="@report.Id">Edit</a>
-                            |
-                            <a asp-page="Delete" asp-route-id="@report.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+                                    else
+                                    {
+                                        <span class="text-muted">No events</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a asp-page="Edit" asp-route-id="@report.Id" class="table-link">Edit</a>
+                                        <a asp-page="Delete" asp-route-id="@report.Id" class="table-link table-link-danger">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </section>
-
-        <hr />
     }
 }
