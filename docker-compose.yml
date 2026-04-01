@@ -1,12 +1,22 @@
+version: "3.9"
+
 services:
   boxofficereporting:
     build:
-      context: .
+      context: ./src/BoxOfficeReporting.Api
       dockerfile: Dockerfile
-    image: boxofficereporting:dev
+    container_name: box-office-reporting
     ports:
       - "8080:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: http://+:8080
-    restart: unless-stopped
+      ConnectionStrings__DefaultConnection: "Data Source=/app/data/app.db"
+      Authentication__Google__ClientId: "${GOOGLE_CLIENT_ID}"
+      Authentication__Google__ClientSecret: "${GOOGLE_CLIENT_SECRET}"
+    volumes:
+      - boxoffice_db:/app/data
+      - boxoffice_keys:/app/keys
+
+volumes:
+  boxoffice_db:
+  boxoffice_keys:
