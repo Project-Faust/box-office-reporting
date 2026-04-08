@@ -1,6 +1,6 @@
 bin/
 obj/
-.git/
+.git
 .vs/
 node_modules/
 Dockerfile*

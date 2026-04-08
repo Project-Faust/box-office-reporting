@@ -1,24 +1,22 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ["BoxOfficeReporting.Api.csproj", "./"]
-RUN dotnet restore "BoxOfficeReporting.Api.csproj"
+COPY ["src/BoxOfficeReporting.Api/BoxOfficeReporting.Api.csproj", "src/BoxOfficeReporting.Api/"]
+RUN dotnet restore "src/BoxOfficeReporting.Api/BoxOfficeReporting.Api.csproj"
 
 COPY . .
+WORKDIR "/src/src/BoxOfficeReporting.Api"
 RUN dotnet publish "BoxOfficeReporting.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-ENV ASPNETCORE_URLS=http://+:8080
-ENV ASPNETCORE_ENVIRONMENT=Development
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-
 COPY --from=build /app/publish .
 
-RUN mkdir -p /app/data
-RUN mkdir -p /app/keys
-
 EXPOSE 8080
+EXPOSE 8081
+
+ENV ASPNETCORE_URLS="https://+:8081;http://+:8080" \
+    ASPNETCORE_HTTPS_PORTS=8081
 
 ENTRYPOINT ["dotnet", "BoxOfficeReporting.Api.dll"]

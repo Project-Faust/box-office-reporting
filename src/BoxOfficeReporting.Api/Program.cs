@@ -2,7 +2,9 @@ using System.Globalization;
 using System.IO;
 using BoxOfficeReporting.Api.Data;
 using BoxOfficeReporting.Api.Models;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,17 +22,10 @@ var keysPath = builder.Environment.IsDevelopment()
     ? Path.Combine(builder.Environment.ContentRootPath, "keys")
     : "/app/keys";
 
-Directory.CreateDirectory(keysPath);
-
-var dataProtectionBuilder = builder
+builder
     .Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(keysPath))
     .SetApplicationName("BoxOfficeReporting");
-
-if (OperatingSystem.IsWindows() && builder.Environment.IsDevelopment())
-{
-    dataProtectionBuilder.ProtectKeysWithDpapi();
-}
 
 builder
     .Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -44,27 +39,36 @@ builder
     .Services.AddAuthentication()
     .AddGoogle(options =>
     {
-        options.ClientId =
-            builder.Configuration["Authentication:Google:ClientId"]
-            ?? throw new InvalidOperationException("Google ClientId is missing.");
-
-        options.ClientSecret =
-            builder.Configuration["Authentication:Google:ClientSecret"]
-            ?? throw new InvalidOperationException("Google ClientSecret is missing.");
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        // Default callback is /signin-google
     });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+app.UseForwardedHeaders(
+    new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+    }
+);
+
+if (!app.Environment.IsDevelopment())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -73,7 +77,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
-app.MapGet("/health", () => Results.Ok("ok")).AllowAnonymous();
 
 app.Run();
