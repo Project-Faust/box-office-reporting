@@ -1,6 +1,8 @@
 services:
   boxofficereporting:
     image: projectfaust/box-office-reporting:latest
+    container_name: box-office-reporting
+    restart: unless-stopped
     ports:
       - "8080:8080"
       - "8081:8081"
@@ -17,6 +19,10 @@ services:
 
       ConnectionStrings__DefaultConnection: "Data Source=/app/data/app.db"
     volumes:
-      - ./keys:/app/keys
-      - ./data:/app/data
+      - boxoffice_keys:/app/keys
+      - boxoffice_data:/app/data
       - ${HTTPS_CERT_DIR}:/https:ro
+
+volumes:
+  boxoffice_keys:
+  boxoffice_data:
