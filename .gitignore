@@ -1,23 +1,34 @@
-# Build output
-bin/
-obj/
-keys/
+# -----------------------------
+# .NET build output
+# -----------------------------
+**/bin/
+**/obj/
 
-# Visual Studio / Rider / VS Code local files
+# -----------------------------
+# SQLite / local DB
+# -----------------------------
+*.db
+*.db-*
+*.sqlite
+
+# -----------------------------
+# Data Protection keys
+# -----------------------------
+**/keys/
+
+# -----------------------------
+# Environment / secrets
+# -----------------------------
+.env
+.env.*
+secrets.json
+**/appsettings.Development.json
+
+# -----------------------------
+# IDE / tooling
+# -----------------------------
 .vs/
+.vscode/
+.idea/
 *.user
 *.suo
-
-# SQLite local database files
-*.db
-*.db-shm
-*.db-wal
-
-# App secrets / local config
-appsettings.Development.json
-secrets.json
-.env
-
-# OS noise
-.DS_Store
-Thumbs.db
